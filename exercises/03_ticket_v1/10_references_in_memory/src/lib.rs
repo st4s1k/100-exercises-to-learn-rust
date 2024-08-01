@@ -13,16 +13,25 @@ mod tests {
 
     #[test]
     fn u16_ref_size() {
-        assert_eq!(size_of::<&u16>(), todo!());
+        let architecture = 64 /* bit */;
+        let reference_pointer_bit_size = 1 * architecture;
+        let total_byte_size = reference_pointer_bit_size / 8;
+        assert_eq!(size_of::<&u16>(), total_byte_size /* 64 bits or 8 bytes */);
     }
 
     #[test]
     fn u64_mut_ref_size() {
-        assert_eq!(size_of::<&mut u64>(), todo!());
+        let architecture = 64 /* bit */;
+        let reference_pointer_bit_size = 1 * architecture;
+        let total_byte_size = reference_pointer_bit_size / 8;
+        assert_eq!(size_of::<&mut u64>(), total_byte_size /* 64 bits or 8 bytes */);
     }
 
     #[test]
     fn ticket_ref_size() {
-        assert_eq!(size_of::<&Ticket>(), todo!());
+        let architecture = 64 /* bit */;
+        let reference_pointer_bit_size = 1 * architecture;
+        let total_byte_size = reference_pointer_bit_size / 8;
+        assert_eq!(size_of::<&Ticket>(), total_byte_size /* 64 bits or 8 bytes */);
     }
 }
