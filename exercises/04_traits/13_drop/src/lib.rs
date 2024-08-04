@@ -4,7 +4,23 @@
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+
+    struct DropBomb(bool);
+
+    impl DropBomb {
+        fn new() -> DropBomb {
+            DropBomb(true)
+        }
+        fn defuse(&mut self) {
+            self.0 = false
+        }
+    }
+
+    impl Drop for DropBomb {
+        fn drop(&mut self) {
+            if self.0 { panic!("BOOM!") }
+        }
+    }
 
     #[test]
     #[should_panic]
