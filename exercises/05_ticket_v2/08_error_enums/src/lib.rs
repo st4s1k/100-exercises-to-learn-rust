@@ -1,14 +1,55 @@
+use TicketNewError::*;
+
 // TODO: Use two variants, one for a title error and one for a description error.
 //   Each variant should contain a string with the explanation of what went wrong exactly.
 //   You'll have to update the implementation of `Ticket::new` as well.
-enum TicketNewError {}
+#[derive(Debug)]
+enum TicketNewError {
+    TitleIsEmpty,
+    TitleTooLong,
+    DescriptionIsEmpty,
+    DescriptionTooLong,
+}
+
+impl TicketNewError {
+    fn message(&self) -> String {
+        String::from(match self {
+            TitleIsEmpty => "Title cannot be empty",
+            TitleTooLong => "Title cannot be longer than 50 bytes",
+            DescriptionIsEmpty => "Description cannot be empty",
+            DescriptionTooLong => "Description cannot be longer than 500 bytes",
+        })
+    }
+}
 
 // TODO: `easy_ticket` should panic when the title is invalid, using the error message
 //   stored inside the relevant variant of the `TicketNewError` enum.
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
-fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
-    todo!()
+fn easy_ticket(
+    title: String,
+    description: String,
+    status: Status,
+) -> Ticket {
+    match Ticket::new(
+        title.clone(),
+        description,
+        status.clone(),
+    ) {
+        Ok(ticket) => ticket,
+        Err(err) => {
+            match err {
+                DescriptionIsEmpty |
+                DescriptionTooLong
+                => Ticket::new(
+                    title,
+                    "Description not provided".to_string(),
+                    status,
+                ).unwrap(),
+                _ => panic!("{}", err.message())
+            }
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -31,24 +72,35 @@ impl Ticket {
         description: String,
         status: Status,
     ) -> Result<Ticket, TicketNewError> {
+        Self::validate(
+            &title,
+            &description,
+        ).unwrap_or_else(|| Ok(
+            Ticket {
+                title,
+                description,
+                status,
+            }
+        ))
+    }
+
+    fn validate(
+        title: &String,
+        description: &String,
+    ) -> Option<Result<Ticket, TicketNewError>> {
         if title.is_empty() {
-            return Err("Title cannot be empty".to_string());
+            return Some(Err(TitleIsEmpty));
         }
         if title.len() > 50 {
-            return Err("Title cannot be longer than 50 bytes".to_string());
+            return Some(Err(TitleTooLong));
         }
         if description.is_empty() {
-            return Err("Description cannot be empty".to_string());
+            return Some(Err(DescriptionIsEmpty));
         }
         if description.len() > 500 {
-            return Err("Description cannot be longer than 500 bytes".to_string());
+            return Some(Err(DescriptionTooLong));
         }
-
-        Ok(Ticket {
-            title,
-            description,
-            status,
-        })
+        None
     }
 }
 
