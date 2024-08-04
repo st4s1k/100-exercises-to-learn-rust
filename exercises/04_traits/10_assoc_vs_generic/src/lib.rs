@@ -13,6 +13,37 @@
 // You don't have to though: it's perfectly okay to write three separate
 // implementations manually. Venture further only if you're curious.
 
+trait Power<T: Sized>: Sized + Copy {
+    fn power(&self, exp: T) -> Self;
+}
+
+macro_rules! impl_power {
+    ($trait_name:ident, $([$base_ty:ty, $exp_ty:ty] $(= $pow:expr)?),+) => {
+        $(impl_power! {
+            @power $trait_name, [$base_ty, $exp_ty] $(= $pow)?
+        })+
+    };
+    (@power $trait_name:ident, [$base_ty:ty, $exp_ty:ty]) => {
+        impl_power! {
+            @power $trait_name, [$base_ty, $exp_ty] = |b: $base_ty, e: $exp_ty| b.pow(e.into())
+        }
+    };
+    (@power $trait_name:ident, [$base_ty:ty, $exp_ty:ty] = $pow:expr) => {
+        impl $trait_name<$exp_ty> for $base_ty {
+            fn power(&self, exp: $exp_ty) -> $base_ty {
+                $pow(*self, exp)
+            }
+        }
+    };
+}
+
+impl_power! {
+    Power,
+    [u32, u16],
+    [u32, u32],
+    [u32, &u32] = |b: u32, e: &u32| b.pow((*e).into())
+}
+
 #[cfg(test)]
 mod tests {
     use super::Power;
