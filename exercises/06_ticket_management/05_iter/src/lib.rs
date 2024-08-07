@@ -1,3 +1,5 @@
+use std::slice::Iter;
+
 use ticket_fields::{TicketDescription, TicketTitle};
 
 // TODO: Provide an `iter` method that returns an iterator over `&Ticket` items.
@@ -29,6 +31,10 @@ impl TicketStore {
 
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
+    }
+
+    pub fn iter(&self) -> Iter<Ticket> {
+        self.tickets.iter()
     }
 }
 
