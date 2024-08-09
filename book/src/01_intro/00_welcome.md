@@ -32,6 +32,11 @@ a mentor to help you along the way should you get stuck. You can
 also find solutions to all exercises in the
 [`solutions` branch of the GitHub repository](https://github.com/mainmatter/100-exercises-to-learn-rust/tree/solutions).
 
+## Formats
+
+You can go through the course material [in the browser](https://rust-exercises.com/100-exercises/).\
+You can also [download it as a PDF file](https://rust-exercises.com/100-exercises-to-learn-rust.pdf), for offline reading.
+
 ## Structure
 
 On the left side of the screen, you can see that the course is divided into sections.
@@ -46,8 +51,7 @@ Before starting the course, make sure to clone the repository to your local mach
 # If you have an SSH key set up with GitHub
 git clone git@github.com:mainmatter/100-exercises-to-learn-rust.git
 # Otherwise, use the HTTPS URL:
-#
-#   git clone https://github.com/mainmatter/100-exercises-to-learn-rust.git
+#   https://github.com/mainmatter/100-exercises-to-learn-rust.git
 ```
 
 We also recommend you work on a branch, so you can easily track your progress and pull
