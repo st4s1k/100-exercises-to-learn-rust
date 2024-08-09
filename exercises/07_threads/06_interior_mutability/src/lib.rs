@@ -1,23 +1,30 @@
 // TODO: Use `Rc` and `RefCell` to implement `DropTracker<T>`, a wrapper around a value of type `T`
 //  that increments a shared `usize` counter every time the wrapped value is dropped.
 
-use std::cell::RefCell;
+use std::cell::{RefCell, RefMut};
+use std::ops::{Add, Deref, DerefMut};
 use std::rc::Rc;
 
 pub struct DropTracker<T> {
     value: T,
-    counter: todo!(),
+    counter: Rc<RefCell<i32>>,
 }
 
 impl<T> DropTracker<T> {
-    pub fn new(value: T, counter: todo!()) -> Self {
+    pub fn new(value: T, counter: Rc<RefCell<i32>>) -> Self {
         Self { value, counter }
     }
 }
 
 impl<T> Drop for DropTracker<T> {
     fn drop(&mut self) {
-        todo!()
+        /*
+            let mut ref_mut: RefMut<i32> = self.counter.borrow_mut();
+            let counter_ref: &mut i32 = ref_mut.deref_mut();
+            *counter_ref += 1;
+            // I'm stupid...
+        */
+        *self.counter.borrow_mut() += 1;
     }
 }
 
