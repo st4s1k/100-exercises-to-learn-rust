@@ -27,6 +27,7 @@ mod tests {
         let addr = listener.local_addr().unwrap();
         let messages = vec!["hello", "from", "this", "task"];
         let timeout = Duration::from_millis(20);
+        // Timeout duration is passed to the "run" task
         let handle = tokio::spawn(run(listener, messages.len(), timeout.clone()));
 
         for message in messages {
@@ -35,9 +36,16 @@ mod tests {
 
             let (beginning, end) = message.split_at(message.len() / 2);
 
-            // Send first half
+            // Send first half & wait for WriteAll future to be Poll::Ready
             writer.write_all(beginning.as_bytes()).await.unwrap();
+            // The line below is causing cancellation after timeout is elapsed for this future
+            // let _ = tokio::time::timeout(timeout, async {
+            //     stream.read_to_end(&mut buffer).await.unwrap(); <-- this is cancelled
+            // })
+            // Nothing is written from this thread into the stream for the duration of 2 timeouts
             tokio::time::sleep(timeout * 2).await;
+            // The future is cancelled and no one is reading the stream,
+            // thus the second half is not received
             writer.write_all(end.as_bytes()).await.unwrap();
 
             // Close the write side of the socket
@@ -46,6 +54,6 @@ mod tests {
 
         let buffered = handle.await.unwrap();
         let buffered = std::str::from_utf8(&buffered).unwrap();
-        assert_eq!(buffered, "");
+        assert_eq!(buffered, "hefrthta");
     }
 }
