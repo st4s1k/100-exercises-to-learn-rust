@@ -5,3 +5,10 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
+ticket_fields = { path = "../../../helpers/ticket_fields" }
+axum = "0.7.5"
+tracing = "0.1"
+tracing-subscriber = "0.3.18"
+serde = { version = "1.0.204", features = ["derive"] }
+thiserror = "1.0.63"
+anyhow = "1.0.86"

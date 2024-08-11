@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 common = { path = "../common" }
 thiserror = "1.0.59"
+serde = { version = "1.0.206", features = ["derive"] }
